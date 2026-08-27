@@ -1,0 +1,68 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile state and metadata",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "lastLoginAt": { "type": "string" }
+      },
+      "required": ["uid"]
+    },
+    "JournalEntry": {
+      "title": "JournalEntry",
+      "description": "User journal reflections and multi-turn conversations with Gemini",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "mood": { "type": "string" },
+        "summary": { "type": "string" },
+        "insights": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "sender": { "type": "string", "enum": ["user", "gemini"] },
+              "text": { "type": "string" },
+              "timestamp": { "type": "string" }
+            },
+            "required": ["id", "sender", "text", "timestamp"]
+          }
+        },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "title", "createdAt", "updatedAt"]
+    }
+  },
+  "collections": [
+    {
+      "path": "users/{userId}",
+      "entity": "User",
+      "description": "User profiles"
+    },
+    {
+      "path": "users/{userId}/interactions/{interactionId}",
+      "entity": "JournalEntry",
+      "description": "User interaction & journal records strictly isolated to userId"
+    },
+    {
+      "path": "users/{userId}/entries/{entryId}",
+      "entity": "JournalEntry",
+      "description": "User journal entries strictly isolated to userId"
+    }
+  ]
+}
